@@ -22,6 +22,7 @@
     [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"url must start with http or https"] callbackId:command.callbackId];
     return;
   }
+  urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
   NSURL *url = [NSURL URLWithString:urlString];
   if (url == nil) {
     [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"bad url"] callbackId:command.callbackId];
@@ -141,6 +142,16 @@
     [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
   }
+}
+
+- (NSArray<UIActivity *> *)safariViewController:(SFSafariViewController *)
+              controller activityItemsForURL:(NSURL *)URL
+              title:(nullable NSString *)title {
+
+    if(self.activityItemProvider)
+        return [self.activityItemProvider safariViewController:controller activityItemsForURL:URL title:title];
+    else
+        return nil;
 }
 
 @end
